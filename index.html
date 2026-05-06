@@ -83,20 +83,18 @@
             justify-content: center;
             flex-wrap: wrap;
         }
-        .cardapio, .shows {
+        .shows {
             list-style: none;
             padding: 0;
             margin: 15px 0 0 0;
         }
-        .cardapio li, .shows li {
+        .shows li {
             background: #1a1a1a;
             margin: 8px 0;
             padding: 12px;
             border-radius: 5px;
             font-size: 1.1rem;
             text-align: left;
-        }
-        .shows li {
             border-left: 3px solid #ffcc00;
         }
         .data-show {
@@ -110,6 +108,31 @@
             color: #666;
             margin-top: 10px;
             font-style: italic;
+        }
+        input {
+            width: 90%;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 5px;
+            border: 1px solid #333;
+            background: #1a1a1a;
+            color: #fff;
+            font-size: 1rem;
+        }
+        #ingresso {
+            display: none;
+            background: #fff;
+            color: #000;
+            padding: 20px;
+            margin-top: 15px;
+            border-radius: 5px;
+            text-align: left;
+            border: 2px dashed #000;
+        }
+        @media print {
+            body * { visibility: hidden; }
+            #ingresso, #ingresso * { visibility: visible; }
+            #ingresso { position: absolute; left: 0; top: 0; width: 100%; border: none; }
         }
     </style>
 </head>
@@ -126,24 +149,30 @@
                     <span class="data-show">SÁBADO 10/05</span>
                     Joãozinho do Piseiro
                 </li>
-                <li>
-                    <span class="data-show">DOMINGO 11/05</span>
-                    Forró de Salgado
-                </li>
                 <!-- PRA ADD MAIS: COPIA O BLOCO <li> ACIMA E MUDA -->
             </ul>
             <p class="aviso-dono">*Agenda atualizada pelo dono</p>
         </div>
         
         <div class="box">
-            <p class="titulo">NOSSO CARDÁPIO 🍻</p>
-            <ul class="cardapio">
-                <li>🍺 Heineken</li>
-                <li>🍺 Amstel</li>
-                <li>🍺 Sol</li>
-                <li>🥤 Refrigerante</li>
-                <li>💧 Água Mineral</li>
-            </ul>
+            <p class="titulo">GERAR INGRESSO 🎟️</p>
+            <p style="font-size:0.9rem; color:#ccc; margin-top:0;">Uso interno: venda na portaria</p>
+            <input type="text" id="nomeCliente" placeholder="Nome do cliente">
+            <input type="text" id="valorPago" placeholder="Valor pago - R$">
+            <input type="text" id="atracao" placeholder="Atração/Show">
+            <button onclick="gerarIngresso()">GERAR INGRESSO</button>
+            
+            <div id="ingresso">
+                <h2 style="text-align:center; margin:0 0 10px 0;">BOTECO ARENA BAR</h2>
+                <p style="text-align:center; font-weight:bold; font-size:1.2rem; margin:0 0 15px 0;">INGRESSO</p>
+                <p><strong>Cliente:</strong> <span id="ingNome"></span></p>
+                <p><strong>Atração:</strong> <span id="ingAtracao"></span></p>
+                <p><strong>Valor:</strong> R$ <span id="ingValor"></span></p>
+                <p><strong>Data da compra:</strong> <span id="ingData"></span></p>
+                <p><strong>Local:</strong> Salgado Filho, Povoado Turma - SE</p>
+                <p style="margin-top:20px; font-size:0.8rem; text-align:center;">Apresente na portaria. Obrigado!</p>
+                <button onclick="window.print()" style="margin-top:15px; width:100%;">IMPRIMIR INGRESSO</button>
+            </div>
         </div>
 
         <div class="box">
@@ -167,6 +196,23 @@
         const pix = document.getElementById('pix').innerText;
         navigator.clipboard.writeText(pix);
         alert('Chave PIX copiada! Valeu 🍻');
+    }
+
+    function gerarIngresso() {
+        const nome = document.getElementById('nomeCliente').value;
+        const valor = document.getElementById('valorPago').value;
+        const atracao = document.getElementById('atracao').value;
+        
+        if(!nome || !valor || !atracao) {
+            alert('Preenche todos os campos primeiro!');
+            return;
+        }
+
+        document.getElementById('ingNome').innerText = nome;
+        document.getElementById('ingValor').innerText = valor;
+        document.getElementById('ingAtracao').innerText = atracao;
+        document.getElementById('ingData').innerText = new Date().toLocaleDateString('pt-BR');
+        document.getElementById('ingresso').style.display = 'block';
     }
     </script>
 </body>
