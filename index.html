@@ -124,7 +124,7 @@
             margin-bottom: 20px;
             color: #ffcc00;
         }
-        input {
+        input, select {
             width: 100%;
             padding: 12px;
             margin: 10px 0;
@@ -206,6 +206,28 @@
         }
         .etapa { display: none; }
         .etapa.ativa { display: block; }
+        .tipo-ingresso {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        .opcao-ingresso {
+            background: #1a1a1a;
+            border: 2px solid #333;
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .opcao-ingresso.selecionado {
+            border-color: #ffcc00;
+            background: rgba(255,204,0,0.1);
+        }
+        .opcao-ingresso h4 {
+            color: #ffcc00;
+            margin-bottom: 5px;
+        }
         @media print {
             body * { visibility: hidden; }
             #ingresso, #ingresso * { visibility: visible; }
@@ -233,19 +255,11 @@
                 <div class="artista-card">
                     <div class="artista-img">🎤</div>
                     <div class="artista-info">
-                        <p class="artista-data">SÁBADO 10/05 - 22H</p>
+                        <p class="artista-data">SEXTA 16/05 - 22H</p>
                         <h3 class="artista-nome">Joãozinho do Piseiro</h3>
                         <p>Abertura da casa: 20h</p>
                     </div>
                 </div>
-                
-                <div class="artista-card">
-                    <div class="artista-img">🎸</div>
-                    <div class="artista-info">
-                        <p class="artista-data">DOMINGO 11/05 - 20H</p>
-                        <h3 class="artista-nome">Forró de Salgado</h3>
-                        <p>Domingão especial</p>
-                    </div>
                 <!-- PRA ADD MAIS: COPIA O BLOCO .artista-card ACIMA -->
             </div>
         </div>
@@ -255,17 +269,29 @@
             <h2 class="section-title">Garanta seu Ingresso</h2>
             <div class="box-ingresso">
                 
-                <!-- ETAPA 1: PIX -->
+                <!-- ETAPA 1: ESCOLHER + PIX -->
                 <div id="etapa1" class="etapa ativa">
-                    <h3>1. PAGAMENTO VIA PIX</h3>
+                    <h3>1. ESCOLHA SEU INGRESSO</h3>
+                    
+                    <div class="tipo-ingresso">
+                        <div class="opcao-ingresso" onclick="selecionarIngresso('pista', 15)">
+                            <h4>PISTA</h4>
+                            <p>R$ 15,00</p>
+                        </div>
+                        <div class="opcao-ingresso" onclick="selecionarIngresso('lounge', 30)">
+                            <h4>LOUNGE</h4>
+                            <p>R$ 30,00</p>
+                        </div>
+                    </div>
+
                     <div class="pix-info">
                         <p>Chave PIX - Celular:</p>
                         <p class="pix-chave" id="pix">(55) 79 9957-8581</p>
                         <button class="btn" onclick="copiarPix()" style="margin:10px 0;">COPIAR CHAVE PIX</button>
-                        <p style="font-size:0.8rem; color:#888;">Valor: R$ 20,00</p>
+                        <p style="font-size:0.9rem; color:#ffcc00;">Valor: R$ <span id="valorSelecionado">0,00</span></p>
                     </div>
                     <input type="text" id="nomeCliente" placeholder="Nome completo">
-                    <button class="btn" onclick="confirmarPagamento()">JÁ PAGUEI - LIBERAR INGRESSO</button>
+                    <button class="btn" onclick="confirmarPagamento()" id="btnPagar" disabled>JÁ PAGUEI - LIBERAR INGRESSO</button>
                 </div>
 
                 <!-- ETAPA 2: INGRESSO -->
@@ -279,6 +305,8 @@
                     <h2 style="color:#000; margin-bottom:5px;">BOTECO ARENA BAR</h2>
                     <p style="color:#ff6600; font-weight:bold; margin-bottom:15px;">INGRESSO OFICIAL</p>
                     <p style="text-align:left; margin:8px 0;"><strong>Nome:</strong> <span id="ingNome"></span></p>
+                    <p style="text-align:left; margin:8px 0;"><strong>Setor:</strong> <span id="ingTipo"></span></p>
+                    <p style="text-align:left; margin:8px 0;"><strong>Valor:</strong> R$ <span id="ingValor"></span></p>
                     <p style="text-align:left; margin:8px 0;"><strong>Data:</strong> <span id="ingData"></span></p>
                     <p style="text-align:left; margin:8px 0;"><strong>Código:</strong> <span id="ingCodigo"></span></p>
                     <p style="text-align:left; margin:8px 0;"><strong>Local:</strong> Salgado, SE - Povoado Filho</p>
@@ -295,7 +323,7 @@
         <h3 style="color:#ffcc00; margin-bottom:15px;">BOTECO ARENA BAR</h3>
         <div class="social">
             <a href="https://wa.me/5579999578581" class="btn-social" target="_blank">WHATSAPP</a>
-            <a href="https://instagram.com/botecoarenabar" class="btn-social" target="_blank">INSTAGRAM</a>
+            <a href="https://instagram.com/botecoarenabar079" class="btn-social" target="_blank">INSTAGRAM</a>
         </div>
         <div class="endereco">
             📍 Salgado, SE - Povoado Filho<br>
@@ -304,8 +332,11 @@
     </div>
 
     <script>
+    let tipoIngresso = '';
+    let valorIngresso = 0;
+
     // CONTADOR REGRESSIVO - MUDE A DATA AQUI
-    const dataShow = new Date("May 10, 2026 22:00:00").getTime();
+    const dataShow = new Date("May 16, 2026 22:00:00").getTime();
     
     setInterval(function() {
         const agora = new Date().getTime();
@@ -317,16 +348,30 @@
         document.getElementById("countdown").innerHTML = dias + "d " + horas + "h " + minutos + "m " + segundos + "s";
     }, 1000);
 
+    function selecionarIngresso(tipo, valor) {
+        tipoIngresso = tipo;
+        valorIngresso = valor;
+        document.getElementById('valorSelecionado').innerText = valor.toFixed(2).replace('.', ',');
+        document.getElementById('btnPagar').disabled = false;
+        
+        document.querySelectorAll('.opcao-ingresso').forEach(el => el.classList.remove('selecionado'));
+        event.currentTarget.classList.add('selecionado');
+    }
+
     function copiarPix() {
         const pix = document.getElementById('pix').innerText;
         navigator.clipboard.writeText(pix);
-        alert('Chave PIX copiada! Após pagar, preencha seu nome e clique em JÁ PAGUEI');
+        alert('Chave PIX copiada! Valor: R$ ' + valorIngresso.toFixed(2).replace('.', ','));
     }
 
     function confirmarPagamento() {
         const nome = document.getElementById('nomeCliente').value;
         if(!nome) {
             alert('Preenche seu nome completo primeiro!');
+            return;
+        }
+        if(!tipoIngresso) {
+            alert('Escolhe PISTA ou LOUNGE primeiro!');
             return;
         }
         document.getElementById('etapa1').classList.remove('ativa');
@@ -338,6 +383,8 @@
         const codigo = 'BAB' + Math.random().toString(36).substr(2, 6).toUpperCase();
         
         document.getElementById('ingNome').innerText = nome;
+        document.getElementById('ingTipo').innerText = tipoIngresso.toUpperCase();
+        document.getElementById('ingValor').innerText = valorIngresso.toFixed(2).replace('.', ',');
         document.getElementById('ingData').innerText = new Date().toLocaleDateString('pt-BR');
         document.getElementById('ingCodigo').innerText = codigo;
         document.getElementById('ingresso').style.display = 'block';
