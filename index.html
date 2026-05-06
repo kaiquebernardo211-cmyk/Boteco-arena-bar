@@ -3,132 +3,209 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BOTECO ARENA BAR</title>
+    <title>BOTECO ARENA BAR - Shows</title>
     <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            margin: 0;
-            padding: 20px;
-            background: #000;
+            font-family: 'Arial', sans-serif;
+            background: #0a0a0a;
             color: #fff;
-            font-family: Arial, sans-serif;
+        }
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9)), url('https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=1200') center/cover;
+            height: 60vh;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
             text-align: center;
+            padding: 20px;
+        }
+        .hero h1 {
+            font-size: 3.5rem;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            text-shadow: 0 0 20px #ffcc00;
+            margin-bottom: 10px;
+        }
+        .hero .slogan {
+            font-size: 1.3rem;
+            color: #ffcc00;
+            margin-bottom: 20px;
+        }
+        .contador {
+            background: rgba(255,204,0,0.1);
+            border: 1px solid #ffcc00;
+            padding: 15px 30px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        .contador p {
+            font-size: 0.9rem;
+            color: #ccc;
+            margin-bottom: 5px;
+        }
+        #countdown {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ffcc00;
         }
         .container {
-            max-width: 500px;
-            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
         }
-        h1 {
-            font-size: 2.5rem;
+        .section {
+            margin-bottom: 60px;
+        }
+        .section-title {
+            font-size: 2rem;
+            color: #ffcc00;
+            text-align: center;
+            margin-bottom: 30px;
             text-transform: uppercase;
-            letter-spacing: 3px;
-            text-shadow: 0 0 10px #ffcc00;
-            margin: 20px 0;
+            position: relative;
         }
-        .chops {
-            font-size: 4rem;
-            animation: bater 1s infinite alternate;
-        }
-        @keyframes bater {
-            0% { transform: rotate(-10deg); }
-            100% { transform: rotate(10deg); }
-        }
-        .box {
-            margin-top: 25px; 
-            background: #111; 
-            padding: 20px; 
-            border-radius: 8px; 
-            border: 1px solid #ffcc00;
-        }
-        .titulo {
-            margin: 0 0 15px 0; 
-            font-size: 1.3rem; 
-            color: #ffcc00;
-            font-weight: bold;
-        }
-        #pix {
-            margin: 10px 0; 
-            font-size: 1.1rem; 
-            word-break: break-all;
-        }
-        button, .btn-link {
-            margin: 8px 5px 0 5px; 
-            background: #ffcc00; 
-            color: #000; 
-            border: none; 
-            padding: 10px 20px; 
-            border-radius: 5px; 
-            cursor: pointer; 
-            font-weight: bold;
-            font-size: 1rem;
-            text-decoration: none;
-            display: inline-block;
-        }
-        button:active, .btn-link:active {
-            transform: scale(0.95);
-        }
-        .endereco {
-            margin-top: 15px;
-            font-size: 1rem;
-            color: #ccc;
-            line-height: 1.4;
-        }
-        .social {
-            margin-top: 20px;
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        .shows {
-            list-style: none;
-            padding: 0;
-            margin: 15px 0 0 0;
-        }
-        .shows li {
-            background: #1a1a1a;
-            margin: 8px 0;
-            padding: 12px;
-            border-radius: 5px;
-            font-size: 1.1rem;
-            text-align: left;
-            border-left: 3px solid #ffcc00;
-        }
-        .data-show {
-            color: #ffcc00;
-            font-weight: bold;
+        .section-title:after {
+            content: '';
             display: block;
-            font-size: 0.9rem;
+            width: 80px;
+            height: 3px;
+            background: #ffcc00;
+            margin: 10px auto 0;
         }
-        .aviso-dono {
-            font-size: 0.8rem;
-            color: #666;
-            margin-top: 10px;
-            font-style: italic;
+        .lineup {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .artista-card {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: 0.3s;
+        }
+        .artista-card:hover {
+            transform: translateY(-5px);
+            border-color: #ffcc00;
+        }
+        .artista-img {
+            height: 200px;
+            background: #1a1a1a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+        }
+        .artista-info {
+            padding: 20px;
+            text-align: center;
+        }
+        .artista-data {
+            color: #ffcc00;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .artista-nome {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+        .box-ingresso {
+            background: #111;
+            border: 2px solid #ffcc00;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .box-ingresso h3 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #ffcc00;
         }
         input {
-            width: 90%;
-            padding: 10px;
-            margin: 8px 0;
-            border-radius: 5px;
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 8px;
             border: 1px solid #333;
             background: #1a1a1a;
             color: #fff;
             font-size: 1rem;
         }
+        .btn {
+            width: 100%;
+            background: #ffcc00;
+            color: #000;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            margin-top: 10px;
+            transition: 0.3s;
+        }
+        .btn:hover {
+            background: #fff;
+        }
+        .btn:disabled {
+            background: #333;
+            color: #666;
+            cursor: not-allowed;
+        }
         #ingresso {
             display: none;
             background: #fff;
             color: #000;
-            padding: 20px;
-            margin-top: 15px;
-            border-radius: 5px;
-            text-align: left;
-            border: 2px dashed #000;
+            padding: 25px;
+            margin-top: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 3px dashed #000;
         }
+        .pix-info {
+            background: #1a1a1a;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            text-align: center;
+        }
+        .pix-chave {
+            font-size: 1.2rem;
+            color: #ffcc00;
+            margin: 10px 0;
+        }
+        .footer {
+            background: #000;
+            padding: 40px 20px;
+            text-align: center;
+            border-top: 1px solid #222;
+        }
+        .social {
+            margin: 20px 0;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .btn-social {
+            background: #111;
+            color: #ffcc00;
+            border: 1px solid #ffcc00;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .endereco {
+            color: #ccc;
+            margin-top: 20px;
+        }
+        .etapa { display: none; }
+        .etapa.ativa { display: block; }
         @media print {
             body * { visibility: hidden; }
             #ingresso, #ingresso * { visibility: visible; }
@@ -137,82 +214,134 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="chops">🍻🍻</div>
+    <!-- CAPA PRINCIPAL -->
+    <div class="hero">
         <h1>BOTECO ARENA BAR</h1>
+        <p class="slogan">O MELHOR FORRÓ DA REGIÃO</p>
+        <div class="contador">
+            <p>PRÓXIMO SHOW EM:</p>
+            <div id="countdown">00d 00h 00m 00s</div>
+        </div>
+    </div>
 
-        <div class="box">
-            <p class="titulo">PRÓXIMOS SHOWS 🎤</p>
-            <ul class="shows">
+    <div class="container">
+        <!-- LINE-UP -->
+        <div class="section">
+            <h2 class="section-title">Line-up Oficial</h2>
+            <div class="lineup">
                 <!-- EDITE AQUI: SÓ O DONO MUDA ISSO NO GITHUB -->
-                <li>
-                    <span class="data-show">SÁBADO 10/05</span>
-                    Joãozinho do Piseiro
-                </li>
-                <!-- PRA ADD MAIS: COPIA O BLOCO <li> ACIMA E MUDA -->
-            </ul>
-            <p class="aviso-dono">*Agenda atualizada pelo dono</p>
-        </div>
-        
-        <div class="box">
-            <p class="titulo">GERAR INGRESSO 🎟️</p>
-            <p style="font-size:0.9rem; color:#ccc; margin-top:0;">Uso interno: venda na portaria</p>
-            <input type="text" id="nomeCliente" placeholder="Nome do cliente">
-            <input type="text" id="valorPago" placeholder="Valor pago - R$">
-            <input type="text" id="atracao" placeholder="Atração/Show">
-            <button onclick="gerarIngresso()">GERAR INGRESSO</button>
-            
-            <div id="ingresso">
-                <h2 style="text-align:center; margin:0 0 10px 0;">BOTECO ARENA BAR</h2>
-                <p style="text-align:center; font-weight:bold; font-size:1.2rem; margin:0 0 15px 0;">INGRESSO</p>
-                <p><strong>Cliente:</strong> <span id="ingNome"></span></p>
-                <p><strong>Atração:</strong> <span id="ingAtracao"></span></p>
-                <p><strong>Valor:</strong> R$ <span id="ingValor"></span></p>
-                <p><strong>Data da compra:</strong> <span id="ingData"></span></p>
-                <p><strong>Local:</strong> Salgado Filho, Povoado Turma - SE</p>
-                <p style="margin-top:20px; font-size:0.8rem; text-align:center;">Apresente na portaria. Obrigado!</p>
-                <button onclick="window.print()" style="margin-top:15px; width:100%;">IMPRIMIR INGRESSO</button>
+                <div class="artista-card">
+                    <div class="artista-img">🎤</div>
+                    <div class="artista-info">
+                        <p class="artista-data">SÁBADO 10/05 - 22H</p>
+                        <h3 class="artista-nome">Joãozinho do Piseiro</h3>
+                        <p>Abertura da casa: 20h</p>
+                    </div>
+                </div>
+                
+                <div class="artista-card">
+                    <div class="artista-img">🎸</div>
+                    <div class="artista-info">
+                        <p class="artista-data">DOMINGO 11/05 - 20H</p>
+                        <h3 class="artista-nome">Forró de Salgado</h3>
+                        <p>Domingão especial</p>
+                    </div>
+                <!-- PRA ADD MAIS: COPIA O BLOCO .artista-card ACIMA -->
             </div>
         </div>
 
-        <div class="box">
-            <p class="titulo">FAZ O PIX 🍻</p>
-            <p id="pix">(55) 79 9957-8581</p>
-            <button onclick="copiarPix()">COPIAR PIX</button>
-            
-            <div class="endereco">
-                📍 Salgado Filho, Povoado Turma - SE
-            </div>
+        <!-- COMPRAR INGRESSO -->
+        <div class="section">
+            <h2 class="section-title">Garanta seu Ingresso</h2>
+            <div class="box-ingresso">
+                
+                <!-- ETAPA 1: PIX -->
+                <div id="etapa1" class="etapa ativa">
+                    <h3>1. PAGAMENTO VIA PIX</h3>
+                    <div class="pix-info">
+                        <p>Chave PIX - Celular:</p>
+                        <p class="pix-chave" id="pix">(55) 79 9957-8581</p>
+                        <button class="btn" onclick="copiarPix()" style="margin:10px 0;">COPIAR CHAVE PIX</button>
+                        <p style="font-size:0.8rem; color:#888;">Valor: R$ 20,00</p>
+                    </div>
+                    <input type="text" id="nomeCliente" placeholder="Nome completo">
+                    <button class="btn" onclick="confirmarPagamento()">JÁ PAGUEI - LIBERAR INGRESSO</button>
+                </div>
 
-            <div class="social">
-                <a href="https://wa.me/5579999578581" class="btn-link" target="_blank">WHATSAPP</a>
-                <a href="https://instagram.com/botecoarenabar" class="btn-link" target="_blank">INSTAGRAM</a>
+                <!-- ETAPA 2: INGRESSO -->
+                <div id="etapa2" class="etapa">
+                    <h3>2. SEU INGRESSO ESTÁ PRONTO</h3>
+                    <button class="btn" onclick="gerarIngresso()">GERAR INGRESSO AGORA</button>
+                </div>
+
+                <!-- INGRESSO GERADO -->
+                <div id="ingresso">
+                    <h2 style="color:#000; margin-bottom:5px;">BOTECO ARENA BAR</h2>
+                    <p style="color:#ff6600; font-weight:bold; margin-bottom:15px;">INGRESSO OFICIAL</p>
+                    <p style="text-align:left; margin:8px 0;"><strong>Nome:</strong> <span id="ingNome"></span></p>
+                    <p style="text-align:left; margin:8px 0;"><strong>Data:</strong> <span id="ingData"></span></p>
+                    <p style="text-align:left; margin:8px 0;"><strong>Código:</strong> <span id="ingCodigo"></span></p>
+                    <p style="text-align:left; margin:8px 0;"><strong>Local:</strong> Salgado, SE - Povoado Filho</p>
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=BOTECOARENA" style="margin:15px 0;">
+                    <p style="font-size:0.8rem; margin-top:15px;">Apresente este ingresso na portaria</p>
+                    <button class="btn" onclick="window.print()" style="margin-top:15px; background:#000; color:#fff;">IMPRIMIR / SALVAR</button>
+                </div>
             </div>
         </div>
     </div>
 
+    <!-- RODAPÉ -->
+    <div class="footer">
+        <h3 style="color:#ffcc00; margin-bottom:15px;">BOTECO ARENA BAR</h3>
+        <div class="social">
+            <a href="https://wa.me/5579999578581" class="btn-social" target="_blank">WHATSAPP</a>
+            <a href="https://instagram.com/botecoarenabar" class="btn-social" target="_blank">INSTAGRAM</a>
+        </div>
+        <div class="endereco">
+            📍 Salgado, SE - Povoado Filho<br>
+            © 2026 Boteco Arena Bar - Todos os direitos reservados
+        </div>
+    </div>
+
     <script>
+    // CONTADOR REGRESSIVO - MUDE A DATA AQUI
+    const dataShow = new Date("May 10, 2026 22:00:00").getTime();
+    
+    setInterval(function() {
+        const agora = new Date().getTime();
+        const distancia = dataShow - agora;
+        const dias = Math.floor(distancia / (1000 * 60 * 60 * 24));
+        const horas = Math.floor((distancia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutos = Math.floor((distancia % (1000 * 60 * 60)) / (1000 * 60));
+        const segundos = Math.floor((distancia % (1000 * 60)) / 1000);
+        document.getElementById("countdown").innerHTML = dias + "d " + horas + "h " + minutos + "m " + segundos + "s";
+    }, 1000);
+
     function copiarPix() {
         const pix = document.getElementById('pix').innerText;
         navigator.clipboard.writeText(pix);
-        alert('Chave PIX copiada! Valeu 🍻');
+        alert('Chave PIX copiada! Após pagar, preencha seu nome e clique em JÁ PAGUEI');
+    }
+
+    function confirmarPagamento() {
+        const nome = document.getElementById('nomeCliente').value;
+        if(!nome) {
+            alert('Preenche seu nome completo primeiro!');
+            return;
+        }
+        document.getElementById('etapa1').classList.remove('ativa');
+        document.getElementById('etapa2').classList.add('ativa');
     }
 
     function gerarIngresso() {
         const nome = document.getElementById('nomeCliente').value;
-        const valor = document.getElementById('valorPago').value;
-        const atracao = document.getElementById('atracao').value;
+        const codigo = 'BAB' + Math.random().toString(36).substr(2, 6).toUpperCase();
         
-        if(!nome || !valor || !atracao) {
-            alert('Preenche todos os campos primeiro!');
-            return;
-        }
-
         document.getElementById('ingNome').innerText = nome;
-        document.getElementById('ingValor').innerText = valor;
-        document.getElementById('ingAtracao').innerText = atracao;
         document.getElementById('ingData').innerText = new Date().toLocaleDateString('pt-BR');
+        document.getElementById('ingCodigo').innerText = codigo;
         document.getElementById('ingresso').style.display = 'block';
+        document.getElementById('etapa2').style.display = 'none';
     }
     </script>
 </body>
