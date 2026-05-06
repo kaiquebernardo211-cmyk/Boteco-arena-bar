@@ -19,6 +19,7 @@
         }
         .container {
             max-width: 500px;
+            width: 100%;
         }
         h1 {
             font-size: 2.5rem;
@@ -35,15 +36,15 @@
             0% { transform: rotate(-10deg); }
             100% { transform: rotate(10deg); }
         }
-        .pix-box {
-            margin-top: 30px; 
+        .box {
+            margin-top: 25px; 
             background: #111; 
             padding: 20px; 
             border-radius: 8px; 
             border: 1px solid #ffcc00;
         }
-        .pix-titulo {
-            margin: 0 0 10px 0; 
+        .titulo {
+            margin: 0 0 15px 0; 
             font-size: 1.3rem; 
             color: #ffcc00;
             font-weight: bold;
@@ -53,8 +54,8 @@
             font-size: 1.1rem; 
             word-break: break-all;
         }
-        button {
-            margin-top: 10px; 
+        button, .btn-link {
+            margin: 8px 5px 0 5px; 
             background: #ffcc00; 
             color: #000; 
             border: none; 
@@ -63,14 +64,52 @@
             cursor: pointer; 
             font-weight: bold;
             font-size: 1rem;
+            text-decoration: none;
+            display: inline-block;
         }
-        button:active {
+        button:active, .btn-link:active {
             transform: scale(0.95);
         }
         .endereco {
             margin-top: 15px;
-            font-size: 0.9rem;
+            font-size: 1rem;
             color: #ccc;
+            line-height: 1.4;
+        }
+        .social {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .cardapio, .shows {
+            list-style: none;
+            padding: 0;
+            margin: 15px 0 0 0;
+        }
+        .cardapio li, .shows li {
+            background: #1a1a1a;
+            margin: 8px 0;
+            padding: 12px;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            text-align: left;
+        }
+        .shows li {
+            border-left: 3px solid #ffcc00;
+        }
+        .data-show {
+            color: #ffcc00;
+            font-weight: bold;
+            display: block;
+            font-size: 0.9rem;
+        }
+        .aviso-dono {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 10px;
+            font-style: italic;
         }
     </style>
 </head>
@@ -78,12 +117,48 @@
     <div class="container">
         <div class="chops">🍻🍻</div>
         <h1>BOTECO ARENA BAR</h1>
+
+        <div class="box">
+            <p class="titulo">PRÓXIMOS SHOWS 🎤</p>
+            <ul class="shows">
+                <!-- EDITE AQUI: SÓ O DONO MUDA ISSO NO GITHUB -->
+                <li>
+                    <span class="data-show">SÁBADO 10/05</span>
+                    Joãozinho do Piseiro
+                </li>
+                <li>
+                    <span class="data-show">DOMINGO 11/05</span>
+                    Forró de Salgado
+                </li>
+                <!-- PRA ADD MAIS: COPIA O BLOCO <li> ACIMA E MUDA -->
+            </ul>
+            <p class="aviso-dono">*Agenda atualizada pelo dono</p>
+        </div>
         
-        <div class="pix-box">
-            <p class="pix-titulo">FAZ O PIX 🍻</p>
+        <div class="box">
+            <p class="titulo">NOSSO CARDÁPIO 🍻</p>
+            <ul class="cardapio">
+                <li>🍺 Heineken</li>
+                <li>🍺 Amstel</li>
+                <li>🍺 Sol</li>
+                <li>🥤 Refrigerante</li>
+                <li>💧 Água Mineral</li>
+            </ul>
+        </div>
+
+        <div class="box">
+            <p class="titulo">FAZ O PIX 🍻</p>
             <p id="pix">(55) 79 9957-8581</p>
             <button onclick="copiarPix()">COPIAR PIX</button>
-            <p class="endereco">Salgado, Povoado Turma - SE</p>
+            
+            <div class="endereco">
+                📍 Salgado Filho, Povoado Turma - SE
+            </div>
+
+            <div class="social">
+                <a href="https://wa.me/5579999578581" class="btn-link" target="_blank">WHATSAPP</a>
+                <a href="https://instagram.com/botecoarenabar" class="btn-link" target="_blank">INSTAGRAM</a>
+            </div>
         </div>
     </div>
 
