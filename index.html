@@ -156,6 +156,13 @@
             color: #666;
             cursor: not-allowed;
         }
+        .btn-confirmar {
+            background: #00cc00;
+            color: #fff;
+        }
+        .btn-confirmar:hover {
+            background: #00ff00;
+        }
         #ingresso {
             display: none;
             background: #fff;
@@ -228,6 +235,35 @@
             color: #ffcc00;
             margin-bottom: 5px;
         }
+        .status-pagamento {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            text-align: center;
+            font-weight: bold;
+        }
+        .status-aguardando {
+            background: #332200;
+            border: 1px solid #ff9900;
+            color: #ff9900;
+        }
+        .status-confirmado {
+            background: #003300;
+            border: 1px solid #00cc00;
+            color: #00cc00;
+        }
+        .painel-admin {
+            background: #220000;
+            border: 2px solid #cc0000;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            display: none;
+        }
+        .painel-admin h4 {
+            color: #ff0000;
+            margin-bottom: 10px;
+        }
         @media print {
             body * { visibility: hidden; }
             #ingresso, #ingresso * { visibility: visible; }
@@ -239,7 +275,7 @@
     <!-- CAPA PRINCIPAL -->
     <div class="hero">
         <h1>BOTECO ARENA BAR</h1>
-        <p class="slogan">O MELHOR FORRÓ DA REGIÃO</p>
+        <p class="slogan">O MELHOR BOTECO DA REGIÃO</p>
         <div class="contador">
             <p>PRÓXIMO SHOW EM:</p>
             <div id="countdown">00d 00h 00m 00s</div>
@@ -291,19 +327,45 @@
                         <p style="font-size:0.9rem; color:#ffcc00;">Valor: R$ <span id="valorSelecionado">0,00</span></p>
                     </div>
                     <input type="text" id="nomeCliente" placeholder="Nome completo">
-                    <button class="btn" onclick="confirmarPagamento()" id="btnPagar" disabled>JÁ PAGUEI - LIBERAR INGRESSO</button>
+                    <input type="text" id="whatsCliente" placeholder="WhatsApp com DDD">
+                    <button class="btn" onclick="solicitarPagamento()" id="btnPagar" disabled>JÁ PAGUEI</button>
                 </div>
 
-                <!-- ETAPA 2: INGRESSO -->
+                <!-- ETAPA 2: AGUARDANDO CONFIRMAÇÃO -->
                 <div id="etapa2" class="etapa">
-                    <h3>2. SEU INGRESSO ESTÁ PRONTO</h3>
-                    <button class="btn" onclick="gerarIngresso()">GERAR INGRESSO AGORA</button>
+                    <div class="status-pagamento status-aguardando">
+                        ⏳ AGUARDANDO CONFIRMAÇÃO DO PAGAMENTO
+                    </div>
+                    <p style="text-align:center; margin:15px 0; color:#ccc;">
+                        Recebemos sua solicitação!<br>
+                        Assim que confirmarmos o PIX, liberamos seu ingresso.<br>
+                        Você será avisado no WhatsApp.
+                    </p>
+                    
+                    <!-- PAINEL SÓ PRA VOCÊ DONO -->
+                    <div class="painel-admin" id="painelAdmin">
+                        <h4>🔒 PAINEL DO DONO</h4>
+                        <p>Cliente: <span id="adminNome"></span></p>
+                        <p>WhatsApp: <span id="adminWhats"></span></p>
+                        <p>Setor: <span id="adminTipo"></span> - R$ <span id="adminValor"></span></p>
+                        <button class="btn btn-confirmar" onclick="confirmarPagamentoAdmin()">CONFIRMAR PAGAMENTO E LIBERAR INGRESSO</button>
+                    </div>
+                    
+                    <button class="btn" onclick="mostrarAdmin()" style="background:#333; font-size:0.8rem;">Sou o dono</button>
+                </div>
+
+                <!-- ETAPA 3: INGRESSO LIBERADO -->
+                <div id="etapa3" class="etapa">
+                    <div class="status-pagamento status-confirmado">
+                        ✅ PAGAMENTO CONFIRMADO
+                    </div>
+                    <button class="btn" onclick="gerarIngresso()">GERAR MEU INGRESSO</button>
                 </div>
 
                 <!-- INGRESSO GERADO -->
                 <div id="ingresso">
                     <h2 style="color:#000; margin-bottom:5px;">BOTECO ARENA BAR</h2>
-                    <p style="color:#ff6600; font-weight:bold; margin-bottom:15px;">INGRESSO OFICIAL</p>
+                    <p style="color:#ff6600; font-weight:bold; margin-bottom:15px;">INGRESSO OFICIAL - PAGO</p>
                     <p style="text-align:left; margin:8px 0;"><strong>Nome:</strong> <span id="ingNome"></span></p>
                     <p style="text-align:left; margin:8px 0;"><strong>Setor:</strong> <span id="ingTipo"></span></p>
                     <p style="text-align:left; margin:8px 0;"><strong>Valor:</strong> R$ <span id="ingValor"></span></p>
@@ -334,6 +396,7 @@
     <script>
     let tipoIngresso = '';
     let valorIngresso = 0;
+    let dadosCliente = {};
 
     // CONTADOR REGRESSIVO - MUDE A DATA AQUI
     const dataShow = new Date("May 16, 2026 22:00:00").getTime();
@@ -364,31 +427,53 @@
         alert('Chave PIX copiada! Valor: R$ ' + valorIngresso.toFixed(2).replace('.', ','));
     }
 
-    function confirmarPagamento() {
+    function solicitarPagamento() {
         const nome = document.getElementById('nomeCliente').value;
-        if(!nome) {
-            alert('Preenche seu nome completo primeiro!');
+        const whats = document.getElementById('whatsCliente').value;
+        if(!nome || !whats) {
+            alert('Preenche seu nome e WhatsApp primeiro!');
             return;
         }
         if(!tipoIngresso) {
             alert('Escolhe PISTA ou LOUNGE primeiro!');
             return;
         }
+        
+        dadosCliente = {nome: nome, whats: whats, tipo: tipoIngresso, valor: valorIngresso};
+        
         document.getElementById('etapa1').classList.remove('ativa');
         document.getElementById('etapa2').classList.add('ativa');
     }
 
+    function mostrarAdmin() {
+        const senha = prompt("Digite a senha do dono:");
+        if(senha === "boteco2026") { // MUDA A SENHA AQUI
+            document.getElementById('adminNome').innerText = dadosCliente.nome;
+            document.getElementById('adminWhats').innerText = dadosCliente.whats;
+            document.getElementById('adminTipo').innerText = dadosCliente.tipo.toUpperCase();
+            document.getElementById('adminValor').innerText = dadosCliente.valor.toFixed(2).replace('.', ',');
+            document.getElementById('painelAdmin').style.display = 'block';
+        } else {
+            alert("Senha incorreta!");
+        }
+    }
+
+    function confirmarPagamentoAdmin() {
+        document.getElementById('etapa2').classList.remove('ativa');
+        document.getElementById('etapa3').classList.add('ativa');
+        alert("Pagamento confirmado! Cliente já pode gerar o ingresso.");
+    }
+
     function gerarIngresso() {
-        const nome = document.getElementById('nomeCliente').value;
         const codigo = 'BAB' + Math.random().toString(36).substr(2, 6).toUpperCase();
         
-        document.getElementById('ingNome').innerText = nome;
-        document.getElementById('ingTipo').innerText = tipoIngresso.toUpperCase();
-        document.getElementById('ingValor').innerText = valorIngresso.toFixed(2).replace('.', ',');
+        document.getElementById('ingNome').innerText = dadosCliente.nome;
+        document.getElementById('ingTipo').innerText = dadosCliente.tipo.toUpperCase();
+        document.getElementById('ingValor').innerText = dadosCliente.valor.toFixed(2).replace('.', ',');
         document.getElementById('ingData').innerText = new Date().toLocaleDateString('pt-BR');
         document.getElementById('ingCodigo').innerText = codigo;
         document.getElementById('ingresso').style.display = 'block';
-        document.getElementById('etapa2').style.display = 'none';
+        document.getElementById('etapa3').style.display = 'none';
     }
     </script>
 </body>
